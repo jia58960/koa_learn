@@ -90,6 +90,7 @@ class LikeValidator extends PositiveValidator {
         this.validateType = checkType
     }
 }
+
 module.exports = {
     PositiveValidator,
     RegisterValidator,

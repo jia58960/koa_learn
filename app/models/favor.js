@@ -1,4 +1,4 @@
-const { db } = require('../../core/db')
+const { db } = require('@core/db')
 const { DataTypes, Model } = require('sequelize')
 const { Art } = require('./art') // 业务表
 
