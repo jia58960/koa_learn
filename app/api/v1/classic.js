@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const { PositiveValidator } = require('@validator')
+const { PositiveValidator, ClassicValidator } = require('@validator')
 const { Flow } = require('@models/flow')
 const { Art } = require('@models/art')
 const { Favor } = require('@models/favor')
@@ -61,6 +61,22 @@ router.get('/:index/next', new Auth().m, async (ctx, next) => {
     ctx.body = art
 })
 
+router.get('/:art_id/:type/favor', new Auth().m,  async (ctx, next) => {
+    const v  = await new ClassicValidator().validate(ctx, {
+        id: 'art_id'
+    })
+    const { art_id } = v.get('path')
+    const type = parseInt(v.get('path.type'))
+    const art = await Art.getData(art_id, type)
+    if (!art) {
+        throw new global.errs.NotFound()
+    }
+    const isLike = await Favor.LikeStatus(ctx.auth.uid, art_id, type)
+    ctx.body = {
+        fav_nums: art.fav_nums,
+        like_status: isLike
+    }
+})
 //demo
 router.post('/v1/:id/classic', async(ctx, next) => {
     const param = ctx.params

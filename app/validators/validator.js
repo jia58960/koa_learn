@@ -69,7 +69,6 @@ function checkType(vals) {
         throw new Error('type是必须参数')
     }
     type = parseInt(type)
-
     if (!LoginType.inThisType(type)) {
         throw new Error('type参数不合法')
     }
@@ -91,10 +90,14 @@ class LikeValidator extends PositiveValidator {
     }
 }
 
+class ClassicValidator extends LikeValidator {
+
+}
 module.exports = {
     PositiveValidator,
     RegisterValidator,
     TokenValidator,
     NotEmptyValidator,
-    LikeValidator
+    LikeValidator,
+    ClassicValidator
 }

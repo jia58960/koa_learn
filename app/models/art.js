@@ -13,10 +13,10 @@ class Art {
             case 100: // type100为movie类型
                 art = await Movie.scope('bh').findOne(finder)
             break;
-            case 200:
+            case 200: // 200为音乐类型
                 art = await Music.scope('bh').findOne(finder)
             break;
-            case 300:
+            case 300: // 300为句子类型
                 art = await Sentence.scope('bh').findOne(finder)
             break;
             case 400:
