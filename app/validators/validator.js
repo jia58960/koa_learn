@@ -1,6 +1,6 @@
 const { Rule, LinValidator } = require('../../core/lin-validator-v2')
 const User = require('../../app/models/user') // 导入User模型用来查找是否有已存在的email
-const { LoginType } = require('../../core/enum')
+const { LoginType, ArtType } = require('../../core/enum')
 
 class PositiveValidator extends LinValidator {
     constructor() {
@@ -74,6 +74,17 @@ function checkType(vals) {
     }
 }
 
+function checkArtType(vals) {
+    let type = vals.body.type || vals.path.type
+    if (!type) {
+        throw new Error('type是必须参数')
+    }
+    type = parseInt(type)
+    if (!ArtType.inThisType(type)) {
+        throw new Error('type参数不合法')
+    }
+}
+
 class NotEmptyValidator extends LinValidator {
     constructor() {
         super()
@@ -86,7 +97,7 @@ class NotEmptyValidator extends LinValidator {
 class LikeValidator extends PositiveValidator {
     constructor() {
         super()
-        this.validateType = checkType
+        this.validateType = checkArtType
     }
 }
 

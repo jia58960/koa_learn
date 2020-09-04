@@ -77,6 +77,11 @@ router.get('/:art_id/:type/favor', new Auth().m,  async (ctx, next) => {
         like_status: isLike
     }
 })
+
+router.get('/favor', new Auth().m, async (ctx, next) => {
+    const res = await Favor.getFavor(ctx.auth.uid)
+    ctx.body = await Art.getClassicData(res)
+})
 //demo
 router.post('/v1/:id/classic', async(ctx, next) => {
     const param = ctx.params

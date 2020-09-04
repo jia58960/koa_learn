@@ -1,6 +1,7 @@
 const { db } = require('@core/db')
-const { DataTypes, Model } = require('sequelize')
+const { DataTypes, Model, Op } = require('sequelize')
 const { Art } = require('./art') // 业务表
+const art = require('./art')
 
 class Favor extends Model {
     static async like(uid, art_id, type) {
@@ -65,6 +66,31 @@ class Favor extends Model {
             }
         })
         return favor ? true : false
+    }
+
+    static async getFavor(uid) {
+        const arts = await Favor.findAll({
+            uid,
+            type: {
+                [Op.not]: 400
+            }
+        })
+        if(!arts) {
+            throw new global.errs.NotFound()
+        }
+        // 初步组装要查询的数据
+        const types = []
+        for (let art of arts) {
+            const currentType = art.type
+            const currentArtId = art.art_id
+            const findType = types.find(item => item.type === currentType)
+            if(!findType) {
+                types.push({type: currentType, ids: [currentArtId]})
+            } else {
+                findType.ids.push(currentArtId)
+            }
+        }
+        return types
     }
 }
 
