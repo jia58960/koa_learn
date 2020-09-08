@@ -4,11 +4,31 @@ const {
     Movie
 } = require('./classic')
 
+const { Favor } = require('./favor')
+
 //展平数组
 const {flatten} = require('lodash')
 const { Op } = require('sequelize')
 
 class Art {
+    constructor(art_id, type) {
+        // 将属性初始化进来
+        this.art_id = art_id
+        this.type = type
+    }
+    // 实例方法
+    async getDetail(uid) {
+        const art = await Art.getData(this.art_id, this.type)
+        if (!art) {
+            throw new global.errs.NotFound()
+        }
+        const isLike = await Favor.LikeStatus(uid, this.art_id, this.type)
+        return {
+            art,
+            like_status: isLike
+        }
+    }
+    // 静态方法
     static async getClassicData(datas) {
         const result = []
         for(let data of datas) {
@@ -17,11 +37,12 @@ class Art {
         }
         return flatten(result)
     }
+    // 静态方法，标准做法是将该方法封装进ArtCollection类
     static async _getDozenOfData(ids, type) {
         const finder = {
             where: {
                 id: {
-                    [Op.in]: ids
+                    [Op.in]: ids // 对应mysql的in语句
                 }
             }
         }
@@ -48,7 +69,7 @@ class Art {
             id: art_id
         }
         let art = null
-        // scope控制是否要取出delete_at update_at created_at等字段，在db.js中全局定义了
+        // useScope控制是否取出delete_at update_at created_at等字段，在db.js中全局定义了
         const scope = useScope ? 'bh' : null
         switch (type) {
             case 100: // type100为movie类型
@@ -65,7 +86,7 @@ class Art {
             default:
             break;
         }
-    return art
+        return art
     }
 }
 

@@ -1,7 +1,6 @@
 const { db } = require('@core/db')
 const { DataTypes, Model, Op } = require('sequelize')
 const { Art } = require('./art') // 业务表
-const art = require('./art')
 
 class Favor extends Model {
     static async like(uid, art_id, type) {
