@@ -6,7 +6,7 @@ class HotBook extends Model{
             order: ['index']
         })
         const ids = []
-        // books.forEach()
+        // books.forEach() await有坑，用for...of才对
     }
 }
 
