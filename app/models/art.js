@@ -4,8 +4,6 @@ const {
     Movie
 } = require('./classic')
 
-const { Favor } = require('./favor')
-
 //展平数组
 const {flatten} = require('lodash')
 const { Op } = require('sequelize')
@@ -18,6 +16,9 @@ class Art {
     }
     // 实例方法
     async getDetail(uid) {
+        const {
+            Favor
+        } = require('./favor')
         const art = await Art.getData(this.art_id, this.type)
         if (!art) {
             throw new global.errs.NotFound()
@@ -65,6 +66,8 @@ class Art {
         return art
     }
     static async getData(art_id, type, useScope = true) {
+        const { Favor } = require('./favor')
+        const { HotBook } = require('./hot_book')
         const finder = {
             id: art_id
         }
@@ -81,7 +84,8 @@ class Art {
             case 300: // 300为句子类型
                 art = await Sentence.scope(scope).findOne(finder)
             break;
-            case 400:
+            case 400: // 400为书籍类型
+                art = await HotBook.scope(scope).findOne(finder)
             break;
             default:
             break;

@@ -1,11 +1,12 @@
 const Router = require('koa-router')
+const {HotBook} = require('@models/hot_book')
 const route = new Router({
     prefix:'/v1/book'
 })
-route.get('/:id', async(ctx, next) => {
+route.get('/', async(ctx, next) => {
+    const favs = await HotBook.getAll()
     ctx.body = {
-        'hello':ctx.params,
-        'header': ctx.request.header,
+        books: favs
     }
 })
 module.exports = route
